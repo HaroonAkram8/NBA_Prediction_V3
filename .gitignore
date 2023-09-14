@@ -2,3 +2,4 @@ backend/Include
 backend/Lib
 backend/Scripts
 backend/pyvenv.cfg
+private_data.ini

@@ -1,5 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS NBA_Prediction;
-ALTER DATABASE "NBA_Prediction_Project" SET search_path TO NBA_Prediction;
+CREATE SCHEMA IF NOT EXISTS nba_db_schema;
+ALTER DATABASE nba_db SET search_path TO nba_db_schema;
 
 CREATE TABLE IF NOT EXISTS TeamInfo (
     id INTEGER PRIMARY KEY,
@@ -12,11 +12,11 @@ CREATE TABLE IF NOT EXISTS Gamelogs (
     season_year VARCHAR(10) NOT NULL,
     game_date DATE NOT NULL,
     team_id INTEGER NOT NULL,
-    elo_rating FLOAT NOT NULL,
-    won BOOLEAN NOT NULL,
+    elo_rating FLOAT,
+    wl BOOLEAN NOT NULL,
     at_home BOOLEAN NOT NULL,
     pts SMALLINT NOT NULL,
-    minutes SMALLINT NOT NULL,
+    min SMALLINT NOT NULL,
     fgm SMALLINT NOT NULL,
     fga SMALLINT NOT NULL,
     fg_pct FLOAT NOT NULL,
