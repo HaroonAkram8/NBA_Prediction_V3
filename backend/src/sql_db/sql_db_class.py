@@ -54,3 +54,50 @@ class nba_psql:
         
         self.connection.autocommit = False
         return success
+    
+    def run_select_query(self, query: str):
+        success = False
+        all_data = {}
+
+        with self.connection.cursor() as cursor:
+            view_query = "CREATE TEMP VIEW temp AS " + query
+            cursor.execute(view_query)
+
+            data_query = "SELECT * FROM temp;"
+            cursor.execute(data_query)
+            all_data['columns'] = [desc[0] for desc in cursor.description]
+            all_data['data'] = cursor.fetchall()
+
+        return success, all_data
+
+def main():
+    from src.globals import (
+        LOCAL_SQL_DATABASE,
+        LOCAL_SQL_USERNAME,
+        LOCAL_SQL_PORT,
+        LOCAL_SQL_HOST,
+        PRIVATE_DATA,
+        SQL_LOCAL_INFO,
+        SQL_LOCAL_PASSWORD
+    )
+    from src.utils import get_from_private_data
+
+    password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
+
+    psql_conn = nba_psql()
+    psql_conn.connect(sql_user=LOCAL_SQL_USERNAME,
+                      sql_password=password,
+                      sql_host=LOCAL_SQL_HOST,
+                      sql_port=LOCAL_SQL_PORT,
+                      sql_database=LOCAL_SQL_DATABASE)
+
+    # =============== EDIT BELOW FOR TESTING ===============
+    query = "SELECT abbr FROM TeamInfo WHERE id > 1610612754;"
+    _, return_dict = psql_conn.run_select_query(query=query)
+    print(return_dict)
+    # ======================================================
+
+    psql_conn.disconnect()
+
+if __name__ == "__main__":
+    main()

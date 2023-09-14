@@ -3,3 +3,4 @@ backend/Lib
 backend/Scripts
 backend/pyvenv.cfg
 private_data.ini
+__pycache__/
