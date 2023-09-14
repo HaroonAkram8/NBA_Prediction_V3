@@ -9,6 +9,10 @@ PRIVATE_DATA = './private_data.ini'
 SQL_LOCAL_INFO = 'SQL_LOCAL_INFO'
 SQL_LOCAL_PASSWORD = 'password'
 
+# WL
+WIN = True
+LOSS = False
+
 # General constants
 EARLIEST_START_YEAR = '2012'
 EARLIEST_SEASON = '2012-13'

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS TeamInfo (
 );
 
 CREATE TABLE IF NOT EXISTS Gamelogs (
-    game_id INTEGER PRIMARY KEY,
+    game_id INTEGER NOT NULL,
     season_year VARCHAR(10) NOT NULL,
     game_date DATE NOT NULL,
     team_id INTEGER NOT NULL,
@@ -38,5 +38,6 @@ CREATE TABLE IF NOT EXISTS Gamelogs (
     pfd SMALLINT NOT NULL,
     plus_minus SMALLINT NOT NULL,
 
+    PRIMARY KEY (game_id, team_id),
     FOREIGN KEY (team_id) REFERENCES TeamInfo(id)
 );
