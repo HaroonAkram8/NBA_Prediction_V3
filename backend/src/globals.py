@@ -19,7 +19,7 @@ MONTH = ["January", "February", "March", "April", "May", "June", "July", "August
 SCHEDULE_URL = f'https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/{SEASON_START_YEAR}/league/00_full_schedule.json'
 
 # Game Columns
-GAMELOG_COLUMNS = ['GAME_ID', 'SEASON_YEAR', 'GAME_DATE', 'TEAM_ID', 'WL', 'PTS' 'FGM','FGA','FG_PCT','FG3M','FG3A','FG3_PCT','FTM','FTA','FT_PCT','OREB','DREB','REB','AST','TOV','STL','BLK','BLKA','PF','PFD','PLUS_MINUS']
+GAMELOG_COLUMNS = ['GAME_ID', 'SEASON_YEAR', 'GAME_DATE', 'TEAM_ID', 'WL', 'PTS', 'FGM','FGA','FG_PCT','FG3M','FG3A','FG3_PCT','FTM','FTA','FT_PCT','OREB','DREB','REB','AST','TOV','STL','BLK','BLKA','PF','PFD','PLUS_MINUS']
 GAMELOG_TABLE_COLUMNS = ['ELO_RATING', 'AT_HOME'] + GAMELOG_COLUMNS
 
 # ELO stats constants
