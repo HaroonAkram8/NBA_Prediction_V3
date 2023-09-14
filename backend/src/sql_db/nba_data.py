@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import requests
 from tqdm import tqdm
 
 from nba_api.stats import endpoints
@@ -29,8 +28,12 @@ def get_team_game_logs(team_id: int, season_type: str, season: str, columns: lis
 
 def main():
     from src.globals import SEASON_TYPE, SEASON
-    #print(get_team_game_logs(1610612761, SEASON_TYPE, SEASON)['MATCHUP'])
-    print(get_all_team_game_logs([1610612761], ['2022-23'], SEASON_TYPE))
+    #print(get_team_game_logs(1610612761, SEASON_TYPE, SEASON, columns=[]).columns)
+    df_game_logs = get_all_team_game_logs([1610612761], ['2022-23'], SEASON_TYPE)
+
+    columns = df_game_logs.columns
+    values_list = df_game_logs.values.tolist()
+    print(len(values_list[0]))
 
 if __name__ == "__main__":
     main()

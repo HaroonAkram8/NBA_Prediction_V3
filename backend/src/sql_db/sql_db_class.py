@@ -1,5 +1,9 @@
+import pandas as pd
 import psycopg2 as pg
 from psycopg2 import sql
+from tqdm import tqdm
+
+from src.globals import GAMELOG_COLUMNS
 
 class nba_psql:
     def __init__(self):
@@ -68,7 +72,28 @@ class nba_psql:
             all_data['columns'] = [desc[0] for desc in cursor.description]
             all_data['data'] = cursor.fetchall()
 
+            self.connection.commit()
+            success = True
+
         return success, all_data
+    
+    def insert_into_gamelogs(self, df_game_logs: pd.DataFrame):
+        success = False
+        df_game_logs = df_game_logs[GAMELOG_COLUMNS + ['AT_HOME']]
+        tuples = [tuple(x) for x in df_game_logs.to_numpy()]
+
+        with self.connection.cursor() as cursor:
+            query = "INSERT INTO Gamelogs (GAME_ID, SEASON_YEAR, GAME_DATE, TEAM_ID, WL, PTS, MIN, FGM,FGA, FG_PCT, FG3M, FG3A, FG3_PCT, \
+                    FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PLUS_MINUS, AT_HOME) \
+                    VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING;"
+            
+            for i in tqdm(range(0, len(tuples)), desc=f"Uploading gamelogs to the Gamelogs table"):
+                cursor.execute(query, tuples[i])
+
+            self.connection.commit()
+            success = True
+
+        return success
 
 def main():
     from src.globals import (
