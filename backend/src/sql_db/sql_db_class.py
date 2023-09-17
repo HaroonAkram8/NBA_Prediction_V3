@@ -94,6 +94,43 @@ class nba_psql:
             success = True
 
         return success
+    ''' UPDATE table_name
+        SET column1 = value1,
+            column2 = value2,
+            ...
+        WHERE condition;'''
+    def set_game_elos(self, elo_games):
+        success = False
+
+        with self.connection.cursor() as cursor:
+            query = "UPDATE Gamelogs SET elo_rating = %s \
+                    WHERE game_id = %s AND team_id = %s;"
+            
+            for i in tqdm(range(0, len(elo_games)), desc=f"Setting ELO rating for each game"):
+                game_id, h_team_id, a_team_id, h_elo, a_elo = elo_games[i]
+                cursor.execute(query, (h_elo, game_id, h_team_id))
+                cursor.execute(query, (a_elo, game_id, a_team_id))
+
+            self.connection.commit()
+            success = True
+
+        return success
+    
+    def select_team_info(self):
+        success = False
+        all_data = {}
+
+        with self.connection.cursor() as cursor:
+            query = "SELECT id, abbr, name FROM TeamInfo;"
+            cursor.execute(query)
+
+            all_data['columns'] = ['id', 'abbr', 'name']
+            all_data['data'] = cursor.fetchall()
+
+            self.connection.commit()
+            success = True
+
+        return success, all_data
 
 def main():
     from src.globals import (
