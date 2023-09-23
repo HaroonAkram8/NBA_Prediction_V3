@@ -4,3 +4,4 @@ backend/Scripts
 backend/pyvenv.cfg
 private_data.ini
 __pycache__/
+share/

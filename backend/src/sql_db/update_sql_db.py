@@ -1,7 +1,7 @@
 from src.sql_db.sql_db_class import nba_psql
 from src.sql_db.nba_data import get_all_team_game_logs, calculate_elo_rating
 
-from src.utils import get_from_private_data, seasons_list
+from src.global_utils import get_from_private_data, seasons_list
 from src.globals import (
         LOCAL_SQL_DATABASE,
         LOCAL_SQL_USERNAME,

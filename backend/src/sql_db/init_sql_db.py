@@ -46,7 +46,7 @@ def upload_file_to_db(sql_user: str, sql_password: str, sql_host: str, sql_port:
     return False
 
 def main():
-    from src.utils import get_from_private_data
+    from src.global_utils import get_from_private_data
     password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
 
     general_path = './backend/src/sql_db/sql_schema_and_queries/'

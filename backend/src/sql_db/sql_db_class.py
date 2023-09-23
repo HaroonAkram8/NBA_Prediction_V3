@@ -3,7 +3,7 @@ import psycopg2 as pg
 from psycopg2 import sql
 from tqdm import tqdm
 
-from src.globals import GAMELOG_COLUMNS
+from src.globals import GAMELOG_COLUMNS, SQL_GAMELOG_COLUMNS
 
 class nba_psql:
     def __init__(self):
@@ -94,11 +94,7 @@ class nba_psql:
             success = True
 
         return success
-    ''' UPDATE table_name
-        SET column1 = value1,
-            column2 = value2,
-            ...
-        WHERE condition;'''
+
     def set_game_elos(self, elo_games):
         success = False
 
@@ -125,6 +121,22 @@ class nba_psql:
             cursor.execute(query)
 
             all_data['columns'] = ['id', 'abbr', 'name']
+            all_data['data'] = cursor.fetchall()
+
+            self.connection.commit()
+            success = True
+
+        return success, all_data
+    
+    def select_gamelogs(self):
+        success = False
+        all_data = {}
+
+        with self.connection.cursor() as cursor:
+            query = "SELECT * FROM Gamelogs ORDER BY game_date ASC;"
+            cursor.execute(query)
+
+            all_data['columns'] = SQL_GAMELOG_COLUMNS
             all_data['data'] = cursor.fetchall()
 
             self.connection.commit()

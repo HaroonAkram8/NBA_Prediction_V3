@@ -25,6 +25,8 @@ SCHEDULE_URL = f'https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/{SEAS
 # Game Columns
 GAMELOG_COLUMNS = ['GAME_ID', 'SEASON_YEAR', 'GAME_DATE', 'TEAM_ID', 'WL', 'PTS', 'MIN', 'FGM','FGA','FG_PCT','FG3M','FG3A','FG3_PCT','FTM','FTA','FT_PCT','OREB','DREB','REB','AST','TOV','STL','BLK','BLKA','PF','PFD','PLUS_MINUS']
 GAMELOG_TABLE_COLUMNS = ['ELO_RATING', 'AT_HOME'] + GAMELOG_COLUMNS
+SQL_GAMELOG_COLUMNS = ['game_id', 'season_year', 'game_date', 'team_id', 'elo_rating', 'wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
+SQL_KEEP_COLUMNS = ['wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
 
 # ELO stats constants
 START_ELO_RATING = 1500.0
