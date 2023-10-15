@@ -59,6 +59,7 @@ class nba_psql:
         self.connection.autocommit = False
         return success
     
+    # REMOVE THIS IS THE FUTURE
     def run_select_query(self, query: str):
         success = False
         all_data = {}

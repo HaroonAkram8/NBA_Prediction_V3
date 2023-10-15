@@ -3,9 +3,12 @@ LOCAL_SQL_DATABASE = 'nba_db'
 LOCAL_SQL_USERNAME = 'postgres'
 LOCAL_SQL_PORT = 5432
 LOCAL_SQL_HOST = 'localhost'
+SCHEMA_PATH = './backend/src/sql_db/sql_schema_and_queries/schema.ddl'
+TEAM_INFO_PATH = './backend/src/sql_db/sql_schema_and_queries/populate_team_info.ddl'
 
 # Private Data Paths
-PRIVATE_DATA = './private_data.ini'
+KEY_PATH = 'backend_key.key'
+PRIVATE_DATA = 'private_data.txt'
 SQL_LOCAL_INFO = 'SQL_LOCAL_INFO'
 SQL_LOCAL_PASSWORD = 'password'
 
