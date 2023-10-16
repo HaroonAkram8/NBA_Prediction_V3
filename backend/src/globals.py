@@ -32,7 +32,8 @@ SQL_GAMELOG_COLUMNS = ['game_id', 'season_year', 'game_date', 'team_id', 'elo_ra
 SQL_KEEP_COLUMNS = ['wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
 
 # ELO stats constants
-START_ELO_RATING = 1500.0
+START_ELO_RATING = 1300.0
+H_ELO_BOOST = 100.0
 
 # Connecting to NBA API
 HEADERS = {'Accept': 'application/json, text/plain, */*',
