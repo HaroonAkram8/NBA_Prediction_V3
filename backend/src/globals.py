@@ -12,6 +12,11 @@ PRIVATE_DATA = 'private_data.txt'
 SQL_LOCAL_INFO = 'SQL_LOCAL_INFO'
 SQL_LOCAL_PASSWORD = 'password'
 
+# train, test, val labels
+TRAIN = 0
+VALIDATION = 1
+TEST = 2
+
 # WL
 WIN = True
 LOSS = False

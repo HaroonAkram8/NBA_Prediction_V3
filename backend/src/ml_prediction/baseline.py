@@ -1,46 +1,11 @@
-import pandas as pd
-
-from src.global_utils import get_from_private_data
-from src.sql_db.sql_db_class import nba_psql
-from src.globals import (
-    LOCAL_SQL_DATABASE, LOCAL_SQL_USERNAME, LOCAL_SQL_PORT, LOCAL_SQL_HOST,
-    PRIVATE_DATA, SQL_LOCAL_INFO, SQL_LOCAL_PASSWORD
-)
+from src.ml_prediction.load_dataset import load_dataset
 
 class Baseline_Model:
     def __init__(self):
-        self.gamelogs = None
-
-        self.train_set = None
-        self.val_set = None
-        self.test_set = None
+        self.train_set, self.val_set, self.test_set, self.gamelogs = None, None, None, None
     
     def load(self, train_val_test_split: list = [0.7, 0.15]):
-        self.gamelogs = self.__get_gamelogs__()
-
-        data_df = pd.DataFrame(data=self.gamelogs['data'])
-        data_df.columns = self.gamelogs['columns']
-
-        data = data_df.values.tolist()
-
-        val_start_index = int(len(data) * train_val_test_split[0])
-        test_start_index = val_start_index + int(len(data) * train_val_test_split[1])
-
-        self.train_set = data[:val_start_index]
-        self.val_set = data[val_start_index:test_start_index]
-        self.test_set = data[test_start_index:]
-        
-    def __get_gamelogs__(self):
-        password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
-
-        psql_conn = nba_psql()
-        psql_conn.connect(sql_user=LOCAL_SQL_USERNAME, sql_password=password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT, sql_database=LOCAL_SQL_DATABASE)
-
-        _, gamelogs = psql_conn.select_paired_gamelogs()
-
-        psql_conn.disconnect()
-
-        return gamelogs
+        self.train_set, self.val_set, self.test_set, self.gamelogs = load_dataset(train_val_test_split=train_val_test_split, paired=True)
     
     def elo_winner(self):
         elo_rating_idx = self.gamelogs['columns'].index('elo_rating')
