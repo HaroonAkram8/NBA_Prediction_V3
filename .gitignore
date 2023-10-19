@@ -6,3 +6,4 @@ private_data.txt
 backend_key.key
 __pycache__/
 share/
+backend/src/ml_prediction/saved_models

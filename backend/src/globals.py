@@ -6,6 +6,9 @@ LOCAL_SQL_HOST = 'localhost'
 SCHEMA_PATH = './backend/src/sql_db/sql_schema_and_queries/schema.ddl'
 TEAM_INFO_PATH = './backend/src/sql_db/sql_schema_and_queries/populate_team_info.ddl'
 
+# Model save path
+MODEL_SAVE_PATH = './backend/src/ml_prediction/saved_models/'
+
 # Private Data Paths
 KEY_PATH = 'backend_key.key'
 PRIVATE_DATA = 'private_data.txt'
@@ -35,6 +38,7 @@ GAMELOG_COLUMNS = ['GAME_ID', 'SEASON_YEAR', 'GAME_DATE', 'TEAM_ID', 'WL', 'PTS'
 GAMELOG_TABLE_COLUMNS = ['ELO_RATING', 'AT_HOME'] + GAMELOG_COLUMNS
 SQL_GAMELOG_COLUMNS = ['game_id', 'season_year', 'game_date', 'team_id', 'elo_rating', 'wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
 SQL_KEEP_COLUMNS = ['wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
+COLUMNS_TO_REMOVE = ['game_id', 'season_year', 'game_date', 'team_id', 'opp_team_id']
 
 # ELO stats constants
 START_ELO_RATING = 1300.0

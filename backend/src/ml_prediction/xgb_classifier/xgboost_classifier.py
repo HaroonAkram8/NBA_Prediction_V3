@@ -3,7 +3,7 @@ from sklearn.metrics import accuracy_score, classification_report
 
 from src.ml_prediction.load_dataset import load_clustered_dataset
 from src.globals import (
-    TRAIN, VALIDATION, TEST
+    TRAIN, VALIDATION, TEST, COLUMNS_TO_REMOVE
 )
 
 class XGBoost_Classifier:
@@ -58,10 +58,9 @@ class XGBoost_Classifier:
         return [item for sublist in l for item in sublist]
 
 def main():
-    columns_to_remove = ['game_id', 'season_year', 'game_date', 'team_id', 'opp_team_id']
     xgb_classif_model = XGBoost_Classifier()
 
-    xgb_classif_model.load(columns_to_remove=columns_to_remove)
+    xgb_classif_model.load(columns_to_remove=COLUMNS_TO_REMOVE)
 
     train_acc, train_classif_rep, train_test, train_pred = xgb_classif_model.train()
     print('Train accuracy: ' + str(train_acc))
