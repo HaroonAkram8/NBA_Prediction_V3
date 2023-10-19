@@ -7,7 +7,7 @@ from src.ml_prediction.lstm.lstm_model import LSTM_Model
 from src.ml_prediction.lstm.lstm_loader import LSTM_Dataloader
 from src.globals import MODEL_SAVE_PATH
 
-class Model_Trainer:
+class LSTM_Model_Trainer:
     def __init__(self, model: LSTM_Model, data_loader: LSTM_Dataloader, criterion=nn.BCEWithLogitsLoss(), learning_rate: float=0.001):
         self.model = model
 
@@ -95,7 +95,7 @@ def main():
 
     model = LSTM_Model(input_size=46)
 
-    model_trainer = Model_Trainer(model=model, data_loader=loader)
+    model_trainer = LSTM_Model_Trainer(model=model, data_loader=loader)
     model_trainer.train(num_epochs=3)
 
 if __name__ == "__main__":
