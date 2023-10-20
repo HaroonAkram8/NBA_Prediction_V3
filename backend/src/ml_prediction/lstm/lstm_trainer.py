@@ -16,76 +16,84 @@ class LSTM_Model_Trainer:
         self.optimizer = optim.Adam(model.parameters(), lr=learning_rate)
         self.criterion = criterion
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-        self.wandb_run = None
-
+    
     def train(self, num_epochs: int=100, save_every_n: int=10):
-        train_accuracy = []
-        train_loss = []
-        val_accuracy = []
-        val_loss = []
+        train_acc_list = []
+        train_loss_list = []
+        val_acc_list = []
+        val_loss_list = []
 
         for epoch in range(num_epochs):
-            total_train_loss = 0.0
-            total_train_acc = 0.0
-            total_epoch = 0
+            train_loss, train_acc = self.__train_epoch__()
+            val_loss, val_acc = self.__evaluate__()
 
-            for i, (inputs, labels) in enumerate(self.train_loader):
-                inputs = inputs.to(self.device)
-                labels = labels.to(self.device)
-
-                self.model.zero_grad()
-                outputs = self.model(inputs)
-                loss = self.criterion(outputs, labels.unsqueeze(1))
-                loss.backward()
-                self.optimizer.step()
-
-                total_train_acc += float(torch.sum(torch.eq(torch.round(outputs), labels.unsqueeze(1))))
-                total_train_loss += loss.item()
-                total_epoch += len(labels)
+            train_loss_list.append(train_loss)
+            train_acc_list.append(train_acc)
+            val_loss_list.append(val_loss)
+            val_acc_list.append(val_acc)
             
-            train_accuracy.append(float(total_train_acc) / total_epoch)
-            train_loss.append(float(total_train_loss) / (i+1))
-            
-            val_acc, val_ls = self.__evaluate__(self.val_loader)
-            val_accuracy.append(val_acc)
-            val_loss.append(val_ls)
+            print('Epoch ' + str(epoch) +f' | Train Acc: {train_acc} Train Loss: {train_loss} | Validation Acc: {val_acc} Validation Loss: {val_loss}')
 
-            print(("Epoch {}: Train accuracy: {} Train loss: {} | " + "Validation accuracy: {} Validation loss: {}").format(epoch,
-                                                                                                                            train_accuracy[epoch],
-                                                                                                                            train_loss[epoch],
-                                                                                                                            val_accuracy[epoch],
-                                                                                                                            val_loss[epoch]))
-
-            if epoch + 1 % save_every_n == 0 and epoch + 1 != num_epochs:
+            if (epoch + 1) % save_every_n == 0 and epoch + 1 != num_epochs:
                 model_name = 'lstm_model_epoch_' + str(epoch) + '.pt'
                 torch.save(self.model.state_dict(), MODEL_SAVE_PATH + model_name)
-                
+        
         model_name = 'lstm_model_epoch_' + str(num_epochs-1) + '.pt'
         torch.save(self.model.state_dict(), MODEL_SAVE_PATH + model_name)
+        
+        return train_acc_list, train_loss_list, val_acc_list, val_loss_list
     
-    def __evaluate__(self, loader):
-        total_loss = 0.0
-        total_err = 0.0
-        total_epoch = 0
-        i = 0
-
-        for _, (inputs, labels) in enumerate(loader):
+    def __train_epoch__(self):
+        epoch_loss = 0.0
+        epoch_acc = 0.0
+        
+        self.model.train()
+        
+        for _, (inputs, labels) in enumerate(self.train_loader):
             inputs = inputs.to(self.device)
             labels = labels.to(self.device)
 
-            outputs = self.model(inputs)
-            loss = self.criterion(outputs, labels.unsqueeze(1))
+            self.optimizer.zero_grad()
+            predictions = self.model(inputs).squeeze()
+            loss = self.criterion(predictions, labels)
+            loss.backward()
+            self.optimizer.step()
+            
+            acc = self.__binary_accuracy__(predictions, labels)
+            
+            epoch_loss += loss.item()
+            epoch_acc += acc.item()
 
-            total_err += float(torch.sum(torch.eq(torch.round(outputs), labels.unsqueeze(1))))
-            total_loss += loss.item()
-            total_epoch += len(labels)
+        return epoch_loss / len(self.train_loader), epoch_acc / len(self.train_loader)
+    
+    def __evaluate__(self):
+        epoch_loss = 0.0
+        epoch_acc = 0.0
 
-            i += 1
+        self.model.eval()
 
-        err = float(total_err) / total_epoch
-        loss = float(total_loss) / (i + 1)
-        return err, loss
+        with torch.no_grad():
+            for _, (inputs, labels) in enumerate(self.val_loader):
+                inputs = inputs.to(self.device)
+                labels = labels.to(self.device)
+                
+                predictions = self.model(inputs).squeeze()
+
+                loss = self.criterion(predictions, labels)
+                acc = self.__binary_accuracy__(predictions, labels)
+
+                epoch_loss += loss.item()
+                epoch_acc += acc.item()
+        
+        return epoch_loss / len(self.val_loader), epoch_acc / len(self.val_loader)
+
+    def __binary_accuracy__(self, preds, y):
+        rounded_preds = torch.round(preds)
+        
+        correct = (rounded_preds == y).float()
+        acc = correct.sum() / len(correct)
+
+        return acc
 
 def main():
     from src.globals import COLUMNS_TO_REMOVE
@@ -95,8 +103,8 @@ def main():
 
     model = LSTM_Model(input_size=46)
 
-    model_trainer = LSTM_Model_Trainer(model=model, data_loader=loader)
-    model_trainer.train(num_epochs=3)
+    model_trainer = LSTM_Model_Trainer(model=model, data_loader=loader, learning_rate=0.0005)
+    _, _, _, _ = model_trainer.train(num_epochs=100, save_every_n=150)
 
 if __name__ == "__main__":
     main()

@@ -55,7 +55,7 @@ def get_gamelogs(paired: bool=False):
     psql_conn.connect(sql_user=LOCAL_SQL_USERNAME, sql_password=password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT, sql_database=LOCAL_SQL_DATABASE)
 
     if paired:
-        _, gamelogs = psql_conn.select_paired_gamelogs()
+        _, gamelogs = psql_conn.select_paired_gamelogs(home_away_only=False)
     else:
         _, gamelogs = psql_conn.select_gamelogs()
 
@@ -69,6 +69,9 @@ def transform_data(columns_to_remove: list, gamelogs: dict):
 
     data_df = data_df.drop(columns=columns_to_remove)
     wl_idx = data_df.columns.get_loc('wl')
+    
+    data_df = data_df.astype(float)
+    data_df = (data_df - data_df.min()) / (data_df.max() - data_df.min())
 
     data = data_df.values.tolist()
     return data, wl_idx

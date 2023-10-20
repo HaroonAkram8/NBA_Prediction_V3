@@ -5,7 +5,7 @@ from src.ml_prediction.load_dataset import load_clustered_dataset
 from src.globals import COLUMNS_TO_REMOVE
 
 class LSTM_Dataloader:
-    def __init__(self, batch_size: int = 64, shuffle: bool = True):
+    def __init__(self, batch_size: int = 32, shuffle: bool = True):
         self.batch_size = batch_size
         self.shuffle = shuffle
 
