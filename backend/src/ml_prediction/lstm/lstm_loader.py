@@ -2,7 +2,6 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 
 from src.ml_prediction.load_dataset import load_clustered_dataset
-from src.globals import COLUMNS_TO_REMOVE
 
 class LSTM_Dataloader:
     def __init__(self, batch_size: int = 32, shuffle: bool = True):
@@ -41,6 +40,8 @@ class LSTM_Dataloader:
         return dataloader
 
 def main():
+    from src.globals import COLUMNS_TO_REMOVE
+    
     loader = LSTM_Dataloader()
     loader.load(columns_to_remove=COLUMNS_TO_REMOVE)
 
