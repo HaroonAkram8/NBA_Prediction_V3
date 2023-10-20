@@ -8,12 +8,12 @@ from src.ml_prediction.lstm.lstm_loader import LSTM_Dataloader
 from src.globals import MODEL_SAVE_PATH
 
 class LSTM_Model_Trainer:
-    def __init__(self, model: LSTM_Model, data_loader: LSTM_Dataloader, criterion=nn.BCEWithLogitsLoss(), learning_rate: float=0.001):
+    def __init__(self, model: LSTM_Model, data_loader: LSTM_Dataloader, criterion=nn.MSELoss(), learning_rate: float=0.0001, weight_decay: float=0.00001):
         self.model = model
 
         self.train_loader, self.val_loader, self.test_loader = data_loader.get_loaders()
 
-        self.optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        self.optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         self.criterion = criterion
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
@@ -99,12 +99,12 @@ def main():
     from src.globals import COLUMNS_TO_REMOVE
 
     loader = LSTM_Dataloader()
-    num_cols = loader.load(columns_to_remove=COLUMNS_TO_REMOVE, num_rows_per_cluster=5)
+    num_cols = loader.load(columns_to_remove=COLUMNS_TO_REMOVE, num_rows_per_cluster=10)
 
-    model = LSTM_Model(input_size=num_cols)
+    model = LSTM_Model(input_size=num_cols, hidden_size=10, num_layers=1)
 
     model_trainer = LSTM_Model_Trainer(model=model, data_loader=loader, learning_rate=0.0001)
-    _, _, _, _ = model_trainer.train(num_epochs=100, save_every_n=150)
+    _, _, _, _ = model_trainer.train(num_epochs=1000, save_every_n=1500)
 
 if __name__ == "__main__":
     main()
