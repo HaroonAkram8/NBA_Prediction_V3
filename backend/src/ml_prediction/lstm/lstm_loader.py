@@ -13,9 +13,9 @@ class LSTM_Dataloader:
     
     def load(self, train_val_test_split: list = [0.7, 0.15], paired: bool=True, num_rows_per_cluster: int=10, columns_to_remove: list=[]):
         train_set, val_set, test_set, self.gamelogs = load_clustered_dataset(train_val_test_split=train_val_test_split,
-                                                              paired=paired,
-                                                              columns_to_remove=columns_to_remove,
-                                                              num_rows_per_cluster=num_rows_per_cluster)
+                                                                             paired=paired,
+                                                                             columns_to_remove=columns_to_remove,
+                                                                             num_rows_per_cluster=num_rows_per_cluster)
 
         self.train_dataloader = self.__dataset_to_dataloader__(train_set)
         self.val_dataloader = self.__dataset_to_dataloader__(val_set)
