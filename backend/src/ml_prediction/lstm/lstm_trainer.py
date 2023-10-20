@@ -99,11 +99,11 @@ def main():
     from src.globals import COLUMNS_TO_REMOVE
 
     loader = LSTM_Dataloader()
-    loader.load(columns_to_remove=COLUMNS_TO_REMOVE)
+    num_cols = loader.load(columns_to_remove=COLUMNS_TO_REMOVE, num_rows_per_cluster=5)
 
-    model = LSTM_Model(input_size=46)
+    model = LSTM_Model(input_size=num_cols)
 
-    model_trainer = LSTM_Model_Trainer(model=model, data_loader=loader, learning_rate=0.0005)
+    model_trainer = LSTM_Model_Trainer(model=model, data_loader=loader, learning_rate=0.0001)
     _, _, _, _ = model_trainer.train(num_epochs=100, save_every_n=150)
 
 if __name__ == "__main__":

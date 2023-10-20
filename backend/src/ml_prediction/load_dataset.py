@@ -38,8 +38,6 @@ def generate_clusters(dataset: list=[], num_rows_per_cluster: int=10, wl_idx: in
     num_clusters = len(dataset) - num_rows_per_cluster - 1
 
     results_list = [item[wl_idx] for item in dataset]
-    for x in dataset:
-        del x[wl_idx]
 
     for i in range(num_clusters):
         cluster = dataset[i:i+num_rows_per_cluster]

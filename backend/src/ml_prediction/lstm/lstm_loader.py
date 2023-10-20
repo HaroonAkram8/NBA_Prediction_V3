@@ -20,6 +20,10 @@ class LSTM_Dataloader:
         self.train_dataloader = self.__dataset_to_dataloader__(train_set)
         self.val_dataloader = self.__dataset_to_dataloader__(val_set)
         self.test_dataloader = self.__dataset_to_dataloader__(test_set)
+
+        num_cols = len(self.gamelogs['columns']) - len(columns_to_remove)
+
+        return num_cols
     
     def get_loaders(self):
         return self.test_dataloader, self.val_dataloader, self.test_dataloader
