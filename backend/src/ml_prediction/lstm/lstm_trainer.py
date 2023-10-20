@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import numpy as np
 
 from src.ml_prediction.lstm.lstm_model import LSTM_Model
 from src.ml_prediction.lstm.lstm_loader import LSTM_Dataloader
