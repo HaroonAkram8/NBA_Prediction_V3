@@ -17,14 +17,21 @@ from src.sql_db.init_sql_db import init_sql_db
 
 
 def setup_backend(run_a: bool, run_p: bool, run_r: bool, run_s: bool):
+    setup_complete = 0
     if run_a or run_p:
         generate_private_data()
+        setup_complete += 1
     if run_a or run_r:
         install_requirements()
+        setup_complete += 1
     if run_a or run_s:
         sql_db_setup()
+        setup_complete += 1
 
-    print('SUCCESS: Setup complete!')
+    num_expected_setup = 3 if run_a else run_p + run_r + run_s
+    print(f"Completed {setup_complete} out of {num_expected_setup}")
+    if setup_complete == num_expected_setup:
+        print('SUCCESS: Setup complete!')
 
 
 def generate_private_data():
