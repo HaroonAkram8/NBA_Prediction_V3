@@ -47,7 +47,7 @@ class XGBoost_Classifier:
 
         return accuracy_score(y_test, y_pred), classification_report(y_test, y_pred), y_test, y_pred
 
-    def __flatten_dataset__(self, dataset: list=[]):
+    def __flatten_dataset__(self, dataset:list = []):
         flattened_set = []
 
         for entry in dataset:
