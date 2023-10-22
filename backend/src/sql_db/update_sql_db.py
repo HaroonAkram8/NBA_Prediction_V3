@@ -10,7 +10,8 @@ from src.globals import (
         PRIVATE_DATA,
         SQL_LOCAL_INFO,
         SQL_LOCAL_PASSWORD,
-        SEASON_TYPE
+        SEASON_TYPE,
+        H_ELO_BOOST
     )
 
 def update_sql_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int, sql_database: str, seasons: list, season_type: str):
@@ -41,9 +42,10 @@ def elo_update(sql_user: str, sql_password: str, sql_host: str, sql_port: int, s
     
     query = "SELECT g1.season_year, g1.game_id AS game_id, g1.team_id AS h_team_id, g2.team_id AS a_team_id, g1.pts AS h_pts, g2.pts AS a_pts \
             FROM Gamelogs g1 JOIN Gamelogs g2 \
-            ON g1.game_id = g2.game_id AND g1.at_home AND NOT g2.at_home AND g1.elo_rating IS NULL \
+            ON g1.game_id = g2.game_id AND g1.at_home AND NOT g2.at_home \
             ORDER BY g1.game_date;"
     success, games_needing_elo = psql_conn.run_select_query(query)
+
     if not success:
         print('ERROR: Failed to retrieve game logs...')
         return False
@@ -72,7 +74,7 @@ def generate_elo_ratings(latest_elo_ratings: dict, games_needing_elo: dict):
 
         h_wins = h_pts >= a_pts
         mov_winner = abs(h_pts - a_pts)
-        h_new_elo = calculate_elo_rating(team_elo=latest_elo_ratings[h_team_id], opp_elo=latest_elo_ratings[a_team_id], won=h_wins, MOV_winner=mov_winner)
+        h_new_elo = H_ELO_BOOST + calculate_elo_rating(team_elo=latest_elo_ratings[h_team_id], opp_elo=latest_elo_ratings[a_team_id], won=h_wins, MOV_winner=mov_winner)
         a_new_elo = calculate_elo_rating(team_elo=latest_elo_ratings[a_team_id], opp_elo=latest_elo_ratings[h_team_id], won=not h_wins, MOV_winner=mov_winner)
 
         latest_elo_ratings[h_team_id] = h_new_elo
