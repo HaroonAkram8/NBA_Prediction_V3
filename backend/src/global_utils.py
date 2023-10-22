@@ -1,16 +1,10 @@
-import json
-
-from src.utils.encryption_keys import load_key
+import configparser
 
 def get_from_private_data(private_data_path: str, section_key: str, value_key: str):
-    with open(private_data_path, 'rb') as file:
-        token = file.read()
+    config = configparser.ConfigParser()
+    config.read(private_data_path)
 
-    fernet = load_key()
-    data_str = fernet.decrypt(token).decode()
-    data_dict = json.loads(data_str)
-
-    return data_dict[section_key][value_key]
+    return config[section_key][value_key]
 
 def seasons_list(start_season_year: int, end_season_year: int):
     seasons = []

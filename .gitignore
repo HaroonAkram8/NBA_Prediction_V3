@@ -3,8 +3,6 @@ backend/Lib
 backend/Scripts
 backend/pyvenv.cfg
 venv
-private_data.txt
-backend_key.key
+private_data.ini
 __pycache__/
 share/
-backend/src/ml_prediction/saved_models
