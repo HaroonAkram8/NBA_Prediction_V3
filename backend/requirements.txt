@@ -1,4 +1,4 @@
 pandas==2.0.3
 psycopg2==2.9.7
 nba-api==1.2.1
-torch==2.1
+torch==2.0.1
