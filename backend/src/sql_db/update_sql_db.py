@@ -1,6 +1,7 @@
+import argparse
+
 from src.sql_db.sql_db_class import nba_psql
 from src.sql_db.nba_data import get_all_team_game_logs, calculate_elo_rating
-
 from src.global_utils import get_from_private_data, seasons_list
 from src.globals import (
         LOCAL_SQL_DATABASE,
@@ -106,7 +107,13 @@ def format_team_ids(unformatted_ids: list):
     return [val for sublist in unformatted_ids for val in sublist]
 
 def main():
-    seasons = seasons_list(2012, 2022)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start_season', type=int, default=2012, help='The year you want to start populating the data with (e.g. 2012-13 season would be 2012).')
+    parser.add_argument('--end_season', type=int, default=2022, help='The year you want to end populating the data with (e.g. 2022-23 season would be 2022).')
+
+    args = parser.parse_args()
+
+    seasons = seasons_list(args.start_season, args.end_season)
     password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
     update_sql_db(sql_user=LOCAL_SQL_USERNAME, sql_password=password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT,
                   sql_database=LOCAL_SQL_DATABASE, seasons=seasons, season_type=SEASON_TYPE)

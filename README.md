@@ -34,6 +34,12 @@ SHOW SEARCH_PATH;   # Make sure the search path is set to nba_db_schema
 quit                # Leave the psql terminal
 ```
 
+5. Populate the gamelogs table:
+
+```
+python3 ./backend/src/sql_db/update_sql_db.py
+```
+
 ## Reactivating the environment
 
 ```
@@ -64,4 +70,23 @@ options:
   -p, --private_data  If used, it will set up private_data.txt with your Postgresql password ecrypted.
   -r, --requirements  If used, it will install requirements.txt for you.
   -s, --sql_init      If used, it will set up the database on Postgresql.
+```
+
+## Populating/updating gamelogs
+
+The usage of the script is the following:
+
+```
+usage: update_sql_db.py [-h] [--start_season START_SEASON] [--end_season END_SEASON]
+
+options:
+  -h, --help                    show this help message and exit
+  --start_season START_SEASON   The year you want to start populating the data with (e.g. 2012-13 season would be 2012).
+  --end_season END_SEASON       The year you want to end populating the data with (e.g. 2022-23 season would be 2022).
+```
+
+Example of usage:
+
+```
+python3 ./backend/src/sql_db/update_sql_db.py --start_season 2012 --end_season 2022
 ```
