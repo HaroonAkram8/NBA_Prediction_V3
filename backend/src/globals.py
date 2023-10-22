@@ -3,11 +3,22 @@ LOCAL_SQL_DATABASE = 'nba_db'
 LOCAL_SQL_USERNAME = 'postgres'
 LOCAL_SQL_PORT = 5432
 LOCAL_SQL_HOST = 'localhost'
+SCHEMA_PATH = './backend/src/sql_db/sql_schema_and_queries/schema.ddl'
+TEAM_INFO_PATH = './backend/src/sql_db/sql_schema_and_queries/populate_team_info.ddl'
+
+# Model save path
+MODEL_SAVE_PATH = './backend/src/ml_prediction/saved_models/'
 
 # Private Data Paths
-PRIVATE_DATA = './private_data.ini'
+KEY_PATH = 'backend_key.key'
+PRIVATE_DATA = 'private_data.txt'
 SQL_LOCAL_INFO = 'SQL_LOCAL_INFO'
 SQL_LOCAL_PASSWORD = 'password'
+
+# train, test, val labels
+TRAIN = 0
+VALIDATION = 1
+TEST = 2
 
 # WL
 WIN = True
@@ -27,9 +38,11 @@ GAMELOG_COLUMNS = ['GAME_ID', 'SEASON_YEAR', 'GAME_DATE', 'TEAM_ID', 'WL', 'PTS'
 GAMELOG_TABLE_COLUMNS = ['ELO_RATING', 'AT_HOME'] + GAMELOG_COLUMNS
 SQL_GAMELOG_COLUMNS = ['game_id', 'season_year', 'game_date', 'team_id', 'elo_rating', 'wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
 SQL_KEEP_COLUMNS = ['wl', 'at_home', 'pts', 'min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'tov', 'stl', 'blk', 'blka', 'pf', 'pfd', 'plus_minus']
+COLUMNS_TO_REMOVE = ['game_id', 'season_year', 'game_date', 'team_id', 'opp_team_id']
 
 # ELO stats constants
-START_ELO_RATING = 1500.0
+START_ELO_RATING = 1300.0
+H_ELO_BOOST = 100.0
 
 # Connecting to NBA API
 HEADERS = {'Accept': 'application/json, text/plain, */*',

@@ -59,6 +59,7 @@ class nba_psql:
         self.connection.autocommit = False
         return success
     
+    # REMOVE THIS IS THE FUTURE
     def run_select_query(self, query: str):
         success = False
         all_data = {}
@@ -137,6 +138,38 @@ class nba_psql:
             cursor.execute(query)
 
             all_data['columns'] = SQL_GAMELOG_COLUMNS
+            all_data['data'] = cursor.fetchall()
+
+            self.connection.commit()
+            success = True
+
+        return success, all_data
+    
+    def select_paired_gamelogs(self, home_away_only: bool=True):
+        success = False
+        all_data = {}
+
+        with self.connection.cursor() as cursor:
+            col_names = "g1.game_id AS game_id, g1.season_year AS season_year, g1.game_date AS game_date, g1.team_id AS team_id, g2.team_id AS opp_team_id, \
+                        g1.elo_rating AS elo_rating, g2.elo_rating AS opp_elo_rating, g1.wl AS wl, g1.at_home AS at_home, g1.pts AS pts, g2.pts AS opp_pts, g1.min AS min, \
+                        g1.fgm AS fgm, g2.fgm AS opp_fgm, g1.fga AS fga, g2.fga AS opp_fga, g1.fg_pct AS fg_pct, g2.fg_pct AS opp_fg_pct, \
+                        g1.fg3m AS fg3m, g2.fg3m AS opp_fg3m, g1.fg3a AS fg3a, g2.fg3a AS opp_fg3a, g1.fg3_pct AS fg3_pct, g2.fg3_pct AS opp_fg3_pct, \
+                        g1.ftm AS ftm, g2.ftm AS opp_ftm, g1.fta AS fta, g2.fta AS opp_fta, g1.ft_pct AS ft_pct, g2.ft_pct AS opp_ft_pct, \
+                        g1.oreb AS oreb, g2.oreb AS opp_oreb, g1.dreb AS dreb, g2.dreb AS opp_dreb, g1.reb AS reb, g2.reb AS opp_reb, g1.ast AS ast, g2.ast AS opp_ast, \
+                        g1.tov AS tov, g2.tov AS opp_tov, g1.stl AS stl, g2.stl AS opp_stl, g1.blk AS blk, g2.blk AS opp_blk, g1.blka AS blka, g2.blka AS opp_blka, \
+                        g1.pf AS pf, g2.pf AS opp_pf, g1.pfd AS pfd, g2.pfd AS opp_pfd, g1.plus_minus AS plus_minus, g2.plus_minus AS opp_plus_minus"
+
+            query = "SELECT " + col_names + " \
+                    FROM Gamelogs g1 JOIN Gamelogs g2 \
+                    ON g1.game_id = g2.game_id AND g1.team_id <> g2.team_id "
+            
+            if home_away_only:
+                query += "WHERE g1.at_home "
+            query += " ORDER BY g1.game_date ASC;"
+
+            cursor.execute(query)
+
+            all_data['columns'] = [desc[0] for desc in cursor.description]
             all_data['data'] = cursor.fetchall()
 
             self.connection.commit()
