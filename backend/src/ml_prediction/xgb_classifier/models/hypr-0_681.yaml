@@ -1,0 +1,52 @@
+colsample_bylevel: !!python/object/apply:numpy.core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  xfUoXI/C7T8=
+colsample_bynode: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  Fa5H4XoU5j8=
+colsample_bytree: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  MzMzMzMz4z8=
+gamma: 0
+learning_rate: 0.01
+max_depth: !!python/object/apply:numpy.core.multiarray.scalar
+- &id002 !!python/object/apply:numpy.dtype
+  args:
+  - i8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  AwAAAAAAAAA=
+n_estimators: !!python/object/apply:numpy.core.multiarray.scalar
+- *id002
+- !!binary |
+  +gAAAAAAAAA=
+subsample: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  fRSuR+F65D8=
