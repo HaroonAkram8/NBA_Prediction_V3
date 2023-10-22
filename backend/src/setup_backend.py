@@ -15,6 +15,7 @@ from src.global_utils import get_from_private_data
 from src.utils.encryption_keys import generate_key, load_key
 from src.sql_db.init_sql_db import init_sql_db
 
+
 def setup_backend(run_a: bool, run_p: bool, run_r: bool, run_s: bool):
     if run_a or run_p:
         generate_private_data()
@@ -24,6 +25,7 @@ def setup_backend(run_a: bool, run_p: bool, run_r: bool, run_s: bool):
         sql_db_setup()
 
     print('SUCCESS: Setup complete!')
+
 
 def generate_private_data():
     print('LOG: Generating key...')
@@ -51,6 +53,7 @@ def generate_private_data():
 
     print()
 
+
 def install_requirements():
     print('LOG: Installing requirements...')
     try:
@@ -62,6 +65,7 @@ def install_requirements():
         print("ERROR: pip command not found. Make sure you're in the virtual environment...")
 
     print()
+
 
 def sql_db_setup():
     print('LOG: Setting up local SQL database...')
@@ -75,6 +79,7 @@ def sql_db_setup():
 
     print()
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--all', action='store_true', help='If used, it will perform all the following actions.')
@@ -85,6 +90,7 @@ def main():
     args = parser.parse_args()
 
     setup_backend(run_a=args.all, run_p=args.private_data, run_r=args.requirements, run_s=args.sql_init)
+
 
 if __name__ == "__main__":
     main()
