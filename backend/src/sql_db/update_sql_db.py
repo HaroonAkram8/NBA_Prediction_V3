@@ -14,6 +14,7 @@ from src.globals import (
         H_ELO_BOOST
     )
 
+
 def update_sql_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int, sql_database: str, seasons: list, season_type: str):
     psql_conn = nba_psql()
     psql_conn.connect(sql_user=sql_user, sql_password=sql_password, sql_host=sql_host, sql_port=sql_port, sql_database=sql_database)
@@ -21,25 +22,26 @@ def update_sql_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int
     query = "SELECT id FROM TeamInfo;"
     success, return_dict = psql_conn.run_select_query(query=query)
     team_ids = format_team_ids(unformatted_ids=return_dict['data'])
-    
+
     df_all_game_logs = get_all_team_game_logs(team_ids=team_ids, seasons=seasons, season_type=season_type)
     if not success:
         print('ERROR: Failed to retrieve game logs...')
         return False
     print('SUCCESS: Retrieved game logs...')
-    
+
     success = psql_conn.insert_into_gamelogs(df_game_logs=df_all_game_logs)
     if not success:
         print('ERROR: Failed to upload gamelogs to Postgresql...')
         return False
     print('SUCCESS: Uploaded gamelogs to Postgresql...')
-    
+
     return psql_conn.disconnect()
+
 
 def elo_update(sql_user: str, sql_password: str, sql_host: str, sql_port: int, sql_database: str, seasons: list, season_type: str):
     psql_conn = nba_psql()
     psql_conn.connect(sql_user=sql_user, sql_password=sql_password, sql_host=sql_host, sql_port=sql_port, sql_database=sql_database)
-    
+
     query = "SELECT g1.season_year, g1.game_id AS game_id, g1.team_id AS h_team_id, g2.team_id AS a_team_id, g1.pts AS h_pts, g2.pts AS a_pts \
             FROM Gamelogs g1 JOIN Gamelogs g2 \
             ON g1.game_id = g2.game_id AND g1.at_home AND NOT g2.at_home \
@@ -62,6 +64,7 @@ def elo_update(sql_user: str, sql_password: str, sql_host: str, sql_port: int, s
 
     return psql_conn.disconnect()
 
+
 def generate_elo_ratings(latest_elo_ratings: dict, games_needing_elo: dict):
     games_with_elos = []
     curr_season_year = games_needing_elo['data'][0][0]
@@ -81,8 +84,9 @@ def generate_elo_ratings(latest_elo_ratings: dict, games_needing_elo: dict):
         latest_elo_ratings[a_team_id] = a_new_elo
 
         games_with_elos.append([game_id, h_team_id, a_team_id, h_new_elo, a_new_elo])
-    
+
     return games_with_elos
+
 
 def set_init_elo(psql_conn: nba_psql, default_elo: float=1500.0):
     _, team_ids = psql_conn.select_team_info()
@@ -94,16 +98,19 @@ def set_init_elo(psql_conn: nba_psql, default_elo: float=1500.0):
 
     return default_elo_ratings
 
+
 def update_new_season_elos(last_season_elo_ratings: dict, base_elo: float=1505.0):
     new_season_elo_ratings = {}
 
     for team_id in last_season_elo_ratings.keys():
         new_season_elo_ratings[team_id] = last_season_elo_ratings[team_id] * 0.75 + base_elo * 0.25
-    
+
     return new_season_elo_ratings
+
 
 def format_team_ids(unformatted_ids: list):
     return [val for sublist in unformatted_ids for val in sublist]
+
 
 def main():
     seasons = seasons_list(2012, 2022)
@@ -112,6 +119,7 @@ def main():
                   sql_database=LOCAL_SQL_DATABASE, seasons=seasons, season_type=SEASON_TYPE)
     elo_update(sql_user=LOCAL_SQL_USERNAME, sql_password=password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT,
                sql_database=LOCAL_SQL_DATABASE, seasons=seasons, season_type=SEASON_TYPE)
+
 
 if __name__ == "__main__":
     main()
