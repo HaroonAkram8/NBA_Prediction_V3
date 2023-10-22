@@ -28,10 +28,16 @@ python3 ./backend/src/setup_backend.py -a
 4. Make sure the database and tables were created correctly. Open your PSQL terminal and sign in. Run the following in the terminal:
 
 ```
-\c nba_db           # Run if you did not select the nba_db database upon signing in
-SHOW SEARCH_PATH;   # Make sure the search path is set to nba_db_schema
-\d                  # Check the tables daily_stock_data and stock_symbol_ids were created under the correct schema
-quit                # Leave the psql terminal
+\c nba_db                       # Run if you did not select the nba_db database upon signing in
+SHOW SEARCH_PATH;               # Make sure the search path is set to nba_db_schema
+\d                              # Check the tables gamelogs and teaminfo were created under the correct schema
+SELECT * FROM teaminfo;         # Check if there is information about the teams
+quit                            # Leave the psql terminal
+```
+
+5. Get data from the previous NBA seasons (populates gamelogs table)
+```
+python3 ./backend/src/sql_db/update_sql_db.py
 ```
 
 ## Reactivating the environment
