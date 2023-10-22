@@ -4,6 +4,11 @@ import subprocess
 import argparse
 from getpass import getpass
 
+import sys
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.append(parent_dir)
+
 from src.globals import (SQL_LOCAL_INFO, KEY_PATH, PRIVATE_DATA, SQL_LOCAL_PASSWORD, LOCAL_SQL_DATABASE,
                              LOCAL_SQL_USERNAME, LOCAL_SQL_PORT, LOCAL_SQL_HOST, SCHEMA_PATH, TEAM_INFO_PATH)
 from src.global_utils import get_from_private_data
@@ -38,12 +43,12 @@ def generate_private_data():
 
     private_data_dict[SQL_LOCAL_INFO][SQL_LOCAL_PASSWORD] = getpass('Enter your Postgresql password: ')
     private_data_str = str(json.dumps(private_data_dict))
-    
+
     enc_priv_data = fernet.encrypt(private_data_str.encode())
     with open(PRIVATE_DATA, 'wb') as file:
         file.write(enc_priv_data)
         print('SUCCESS: Wrote your data to ' + PRIVATE_DATA + '...')
-    
+
     print()
 
 def install_requirements():
@@ -55,12 +60,12 @@ def install_requirements():
         print("ERROR: An error occurred while installing requirements...")
     except FileNotFoundError:
         print("ERROR: pip command not found. Make sure you're in the virtual environment...")
-    
+
     print()
 
 def sql_db_setup():
     print('LOG: Setting up local SQL database...')
-    
+
     sql_password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
     if init_sql_db(sql_user=LOCAL_SQL_USERNAME, sql_password=sql_password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT,
                    sql_database=LOCAL_SQL_DATABASE, schema_path=SCHEMA_PATH, team_info_path=TEAM_INFO_PATH):
