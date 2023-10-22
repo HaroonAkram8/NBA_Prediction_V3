@@ -9,6 +9,7 @@ from src.globals import (
     SQL_LOCAL_PASSWORD
 )
 
+
 def init_sql_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int, sql_database: str, schema_path: str, team_info_path: str):
     if not create_db(sql_user=sql_user, sql_password=sql_password, sql_host=sql_host, sql_port=sql_port, sql_database=sql_database):
         print('ERROR: Failed to create database in Postgresql...')
@@ -27,14 +28,16 @@ def init_sql_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int, 
 
     return True
 
+
 def create_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int, sql_database: str):
     psql_conn = nba_psql()
 
     if psql_conn.connect(sql_user=sql_user, sql_password=sql_password, sql_host=sql_host, sql_port=sql_port, sql_database='postgres'):
         if psql_conn.create_database(dbname=sql_database):
             return psql_conn.disconnect()
-    
+
     return False
+
 
 def upload_file_to_db(sql_user: str, sql_password: str, sql_host: str, sql_port: int, sql_database: str, file_path: str):
     psql_conn = nba_psql()
@@ -42,8 +45,9 @@ def upload_file_to_db(sql_user: str, sql_password: str, sql_host: str, sql_port:
     if psql_conn.connect(sql_user=sql_user, sql_password=sql_password, sql_host=sql_host, sql_port=sql_port, sql_database=sql_database):
         if psql_conn.upload_file(file_path=file_path):
             return psql_conn.disconnect()
-    
+
     return False
+
 
 def main():
     from src.global_utils import get_from_private_data
@@ -55,6 +59,7 @@ def main():
 
     init_sql_db(sql_user=LOCAL_SQL_USERNAME, sql_password=password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT,
                 sql_database=LOCAL_SQL_DATABASE, schema_path=schema_path, team_info_path=team_info_path)
+
 
 if __name__ == "__main__":
     main()
