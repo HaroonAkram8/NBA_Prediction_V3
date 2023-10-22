@@ -39,7 +39,7 @@ class XGBoost_Classifier:
 
         return None, None, None, None
 
-    def __predict__(self, dataset: list=[]):
+    def __predict__(self, dataset: list = []):
         X_test = [item[0] for item in dataset]
         y_test = [item[1] for item in dataset]
 
