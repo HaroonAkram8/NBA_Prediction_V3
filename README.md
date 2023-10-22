@@ -13,7 +13,7 @@
 
 ```
 cd ./backend
-python3 -m venv .   # create virtual environment for installing dependencies in root directory
+py -m venv .   # create virtual environment for installing dependencies in root directory
 
 cd ..
 ./backend/Scripts/activate  # run this to activate your virtual environment if it isn't activated already
@@ -22,7 +22,7 @@ cd ..
 3. Run the following command to set up the repo:
 
 ```
-python3 ./backend/src/setup_backend.py -a
+py ./backend/src/setup_backend.py -a
 ```
 
 4. Make sure the database and tables were created correctly. Open your PSQL terminal and sign in. Run the following in the terminal:
@@ -37,7 +37,7 @@ quit                # Leave the psql terminal
 5. Populate the gamelogs table:
 
 ```
-python3 ./backend/src/sql_db/update_sql_db.py
+py ./backend/src/sql_db/update_sql_db.py
 ```
 
 ## Reactivating the environment
@@ -55,7 +55,7 @@ pip install/uninstall [package_name]
 pip freeze > ./backend/requirements.txt
 ```
 
-For installing packages, use `pip install -r ./backend/requirements.txt` OR `python3 ./backend/src/setup_backend.py -r`
+For installing packages, use `pip install -r ./backend/requirements.txt` OR `py ./backend/src/setup_backend.py -r`
 
 ## Repository setup script
 
@@ -88,5 +88,5 @@ options:
 Example of usage:
 
 ```
-python3 ./backend/src/sql_db/update_sql_db.py --start_season 2012 --end_season 2022
+py ./backend/src/sql_db/update_sql_db.py --start_season 2012 --end_season 2022
 ```
