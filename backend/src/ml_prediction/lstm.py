@@ -5,6 +5,7 @@ from torch.utils.data import TensorDataset, DataLoader
 from src.ml_prediction.load_dataset import load_dataset
 from src.globals import SQL_KEEP_COLUMNS
 
+
 class LSTM_Model(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes):
         super(LSTM_Model, self).__init__()
@@ -23,6 +24,7 @@ class LSTM_Model(nn.Module):
 
         return out
 
+
 class LSTM_Dataloader:
     def __init__(self, batch_size: int = 64, shuffle: bool = True):
         self.batch_size = batch_size
@@ -31,7 +33,7 @@ class LSTM_Dataloader:
         self.train_dataloader = None
         self.val_dataloader = None
         self.test_dataloader = None
-    
+
     def load(self, train_val_test_split: list = [0.7, 0.15], sequence_len: int = 10):
         train_set, val_set, test_set = load_dataset(columns_to_keep=SQL_KEEP_COLUMNS, train_val_test_split=train_val_test_split)
 
@@ -42,7 +44,7 @@ class LSTM_Dataloader:
         self.train_dataloader = DataLoader(train_tensor_set, batch_size=self.batch_size, shuffle=self.shuffle)
         self.val_dataloader = DataLoader(val_tensor_set, batch_size=self.batch_size, shuffle=self.shuffle)
         self.test_dataloader = DataLoader(test_tensor_set, batch_size=self.batch_size, shuffle=self.shuffle)
-    
+
     def __generate_sequenced_dataset__(self, dataset: list, sequence_len: int):
         sequenced_set, labels = self.__generate_sequences__(dataset=dataset, sequence_len=sequence_len)
 
@@ -62,18 +64,19 @@ class LSTM_Dataloader:
             if i + sequence_len + 1 > dataset_len:
                 break
 
-            sequence = dataset[i : i + sequence_len]
+            sequence = dataset[i: i + sequence_len]
             sequenced_set.append(sequence)
-            
-            next_game_outcome = dataset[i + sequence_len][0] #Win/loss of next game
+
+            next_game_outcome = dataset[i + sequence_len][0]  # Win/loss of next game
             labels.append(next_game_outcome)
-        
+
         return sequenced_set, labels
 
 
 def main():
     loader = LSTM_Dataloader()
     loader.load()
+
 
 if __name__ == "__main__":
     main()
