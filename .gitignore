@@ -8,3 +8,5 @@ backend_key.key
 __pycache__/
 share/
 backend/src/ml_prediction/saved_models
+backend/src/ml_prediction/xgb_classifier/models/*.json
+backend/src/ml_prediction/xgb_classifier/models/*.yaml
