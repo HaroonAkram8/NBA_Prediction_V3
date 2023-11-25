@@ -5,6 +5,7 @@ from tqdm import tqdm
 
 from src.globals import GAMELOG_COLUMNS, SQL_GAMELOG_COLUMNS
 
+
 class nba_psql:
     def __init__(self):
         self.connection = None
@@ -15,7 +16,7 @@ class nba_psql:
             return True
         except pg.Error:
             return False
-    
+
     def disconnect(self):
         try:
             if self.connection and not self.connection.closed:
@@ -23,7 +24,7 @@ class nba_psql:
             return True
         except pg.Error:
             return False
-    
+
     def create_database(self, dbname: str) -> bool:
         success = False
 
@@ -44,7 +45,7 @@ class nba_psql:
 
         self.connection.autocommit = False
         return success
-    
+
     def upload_file(self, file_path: str):
         success = False
 
@@ -55,10 +56,10 @@ class nba_psql:
             cursor.execute(file.read())
 
             success = True
-        
+
         self.connection.autocommit = False
         return success
-    
+
     # REMOVE THIS IS THE FUTURE
     def run_select_query(self, query: str):
         success = False
@@ -77,7 +78,7 @@ class nba_psql:
             success = True
 
         return success, all_data
-    
+
     def insert_into_gamelogs(self, df_game_logs: pd.DataFrame):
         success = False
         df_game_logs = df_game_logs[GAMELOG_COLUMNS + ['AT_HOME']]
@@ -87,7 +88,7 @@ class nba_psql:
             query = "INSERT INTO Gamelogs (GAME_ID, SEASON_YEAR, GAME_DATE, TEAM_ID, WL, PTS, MIN, FGM,FGA, FG_PCT, FG3M, FG3A, FG3_PCT, \
                     FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PLUS_MINUS, AT_HOME) \
                     VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING;"
-            
+
             for i in tqdm(range(0, len(tuples)), desc=f"Uploading gamelogs to the Gamelogs table"):
                 cursor.execute(query, tuples[i])
 
@@ -102,7 +103,7 @@ class nba_psql:
         with self.connection.cursor() as cursor:
             query = "UPDATE Gamelogs SET elo_rating = %s \
                     WHERE game_id = %s AND team_id = %s;"
-            
+
             for i in tqdm(range(0, len(elo_games)), desc=f"Setting ELO rating for each game"):
                 game_id, h_team_id, a_team_id, h_elo, a_elo = elo_games[i]
                 cursor.execute(query, (h_elo, game_id, h_team_id))
@@ -112,7 +113,7 @@ class nba_psql:
             success = True
 
         return success
-    
+
     def select_team_info(self):
         success = False
         all_data = {}
@@ -128,7 +129,7 @@ class nba_psql:
             success = True
 
         return success, all_data
-    
+
     def select_gamelogs(self):
         success = False
         all_data = {}
@@ -144,8 +145,8 @@ class nba_psql:
             success = True
 
         return success, all_data
-    
-    def select_paired_gamelogs(self, home_away_only: bool=True):
+
+    def select_paired_gamelogs(self, home_away_only: bool = True):
         success = False
         all_data = {}
 
@@ -162,7 +163,7 @@ class nba_psql:
             query = "SELECT " + col_names + " \
                     FROM Gamelogs g1 JOIN Gamelogs g2 \
                     ON g1.game_id = g2.game_id AND g1.team_id <> g2.team_id "
-            
+
             if home_away_only:
                 query += "WHERE g1.at_home "
             query += " ORDER BY g1.game_date ASC;"
@@ -176,6 +177,7 @@ class nba_psql:
             success = True
 
         return success, all_data
+
 
 def main():
     from src.globals import (
@@ -205,6 +207,7 @@ def main():
     # ======================================================
 
     psql_conn.disconnect()
+
 
 if __name__ == "__main__":
     main()

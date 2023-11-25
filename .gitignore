@@ -2,8 +2,11 @@ backend/Include
 backend/Lib
 backend/Scripts
 backend/pyvenv.cfg
+venv
 private_data.txt
 backend_key.key
 __pycache__/
 share/
 backend/src/ml_prediction/saved_models
+backend/src/ml_prediction/xgb_classifier/models/*.json
+backend/src/ml_prediction/xgb_classifier/models/*.yaml
