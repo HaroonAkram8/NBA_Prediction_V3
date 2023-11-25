@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
 
+
 class LSTM_Model(nn.Module):
-    def __init__(self, input_size: int=100, hidden_size: int=200, num_layers: int=1, num_classes: int=1):
+    def __init__(self, input_size: int = 100, hidden_size: int = 200, num_layers: int = 1, num_classes: int = 1):
         super(LSTM_Model, self).__init__()
 
         self.hidden_size = hidden_size

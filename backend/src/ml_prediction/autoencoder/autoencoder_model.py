@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class Autoencoder_Model(nn.Module):
     def __init__(self, latent_dims, num_games: int=10, num_cols: int=47):
         super(Autoencoder_Model, self).__init__()
@@ -16,6 +17,7 @@ class Autoencoder_Model(nn.Module):
         z = self.encoder(x)
         return self.decoder(z)
 
+
 class Encoder(nn.Module):
     def __init__(self, latent_dims, dim_1, dim_2):
         super(Encoder, self).__init__()
@@ -27,6 +29,7 @@ class Encoder(nn.Module):
         x = F.relu(self.linear1(x))
 
         return self.linear2(x)
+
 
 class Decoder(nn.Module):
     def __init__(self, latent_dims, dim_1, dim_2, num_games, num_cols):

@@ -1,12 +1,13 @@
 from src.ml_prediction.load_dataset import load_dataset
 
+
 class Baseline_Model:
     def __init__(self):
         self.train_set, self.val_set, self.test_set, self.gamelogs = None, None, None, None
-    
+
     def load(self, train_val_test_split: list = [0.7, 0.15]):
         self.train_set, self.val_set, self.test_set, self.gamelogs = load_dataset(train_val_test_split=train_val_test_split, paired=True)
-    
+
     def elo_winner(self):
         elo_rating_idx = self.gamelogs['columns'].index('elo_rating')
         opp_elo_rating_idx = self.gamelogs['columns'].index('opp_elo_rating')
@@ -34,7 +35,7 @@ class Baseline_Model:
 
             if wl and elo_rating >= opp_elo_rating or not wl and elo_rating <= opp_elo_rating:
                 num_won += 1
-        
+
         return [num_won, num_total, float(num_won / num_total)]
 
 
@@ -43,6 +44,7 @@ def main():
 
     base_model.load()
     print(base_model.elo_winner())
+
 
 if __name__ == "__main__":
     main()

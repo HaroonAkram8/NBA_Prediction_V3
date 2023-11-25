@@ -4,21 +4,35 @@ import subprocess
 import argparse
 from getpass import getpass
 
+import sys
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.append(parent_dir)
+
 from src.globals import (SQL_LOCAL_INFO, KEY_PATH, PRIVATE_DATA, SQL_LOCAL_PASSWORD, LOCAL_SQL_DATABASE,
                              LOCAL_SQL_USERNAME, LOCAL_SQL_PORT, LOCAL_SQL_HOST, SCHEMA_PATH, TEAM_INFO_PATH)
 from src.global_utils import get_from_private_data
 from src.utils.encryption_keys import generate_key, load_key
 from src.sql_db.init_sql_db import init_sql_db
 
+
 def setup_backend(run_a: bool, run_p: bool, run_r: bool, run_s: bool):
+    setup_complete = 0
     if run_a or run_p:
         generate_private_data()
+        setup_complete += 1
     if run_a or run_r:
         install_requirements()
+        setup_complete += 1
     if run_a or run_s:
         sql_db_setup()
+        setup_complete += 1
 
-    print('SUCCESS: Setup complete!')
+    num_expected_setup = 3 if run_a else run_p + run_r + run_s
+    print(f"Completed {setup_complete} out of {num_expected_setup}")
+    if setup_complete == num_expected_setup:
+        print('SUCCESS: Setup complete!')
+
 
 def generate_private_data():
     print('LOG: Generating key...')
@@ -38,13 +52,14 @@ def generate_private_data():
 
     private_data_dict[SQL_LOCAL_INFO][SQL_LOCAL_PASSWORD] = getpass('Enter your Postgresql password: ')
     private_data_str = str(json.dumps(private_data_dict))
-    
+
     enc_priv_data = fernet.encrypt(private_data_str.encode())
     with open(PRIVATE_DATA, 'wb') as file:
         file.write(enc_priv_data)
         print('SUCCESS: Wrote your data to ' + PRIVATE_DATA + '...')
-    
+
     print()
+
 
 def install_requirements():
     print('LOG: Installing requirements...')
@@ -55,12 +70,13 @@ def install_requirements():
         print("ERROR: An error occurred while installing requirements...")
     except FileNotFoundError:
         print("ERROR: pip command not found. Make sure you're in the virtual environment...")
-    
+
     print()
+
 
 def sql_db_setup():
     print('LOG: Setting up local SQL database...')
-    
+
     sql_password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
     if init_sql_db(sql_user=LOCAL_SQL_USERNAME, sql_password=sql_password, sql_host=LOCAL_SQL_HOST, sql_port=LOCAL_SQL_PORT,
                    sql_database=LOCAL_SQL_DATABASE, schema_path=SCHEMA_PATH, team_info_path=TEAM_INFO_PATH):
@@ -69,6 +85,7 @@ def sql_db_setup():
         print('ERROR: Local SQL set up has failed...')
 
     print()
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -80,6 +97,7 @@ def main():
     args = parser.parse_args()
 
     setup_backend(run_a=args.all, run_p=args.private_data, run_r=args.requirements, run_s=args.sql_init)
+
 
 if __name__ == "__main__":
     main()

@@ -7,6 +7,7 @@ from src.globals import (
 from src.global_utils import get_from_private_data
 from src.sql_db.sql_db_class import nba_psql
 
+
 def load_clustered_dataset(train_val_test_split: list = [0.7, 0.15], paired: bool=False, columns_to_remove: list=[], num_rows_per_cluster: int=10):
     train_set, val_set, test_set, gamelogs, wl_idx = load_dataset(train_val_test_split=train_val_test_split, paired=paired, columns_to_remove=columns_to_remove)
 
@@ -15,6 +16,7 @@ def load_clustered_dataset(train_val_test_split: list = [0.7, 0.15], paired: boo
     clustered_test_set = generate_clusters(dataset=test_set, num_rows_per_cluster=num_rows_per_cluster, wl_idx=wl_idx)
 
     return clustered_train_set, clustered_val_set, clustered_test_set, gamelogs
+
 
 def load_dataset(train_val_test_split: list = [0.7, 0.15], paired: bool=False, columns_to_remove: list=[]):
     gamelogs = get_gamelogs(paired=paired)
@@ -33,7 +35,8 @@ def load_dataset(train_val_test_split: list = [0.7, 0.15], paired: bool=False, c
 
     return train_set, val_set, test_set, gamelogs, wl_idx
 
-def generate_clusters(dataset: list=[], num_rows_per_cluster: int=10, wl_idx: int=-1):
+
+def generate_clusters(dataset: list=[], num_rows_per_cluster: int = 10, wl_idx: int = -1):
     clustered_dataset = []
     num_clusters = len(dataset) - num_rows_per_cluster - 1
 
@@ -43,10 +46,11 @@ def generate_clusters(dataset: list=[], num_rows_per_cluster: int=10, wl_idx: in
         cluster = dataset[i:i+num_rows_per_cluster]
         result = results_list[i + num_rows_per_cluster + 1]
         clustered_dataset.append((cluster, result))
-    
+
     return clustered_dataset
 
-def get_gamelogs(paired: bool=False):
+
+def get_gamelogs(paired: bool = False):
     password = get_from_private_data(private_data_path=PRIVATE_DATA, section_key=SQL_LOCAL_INFO, value_key=SQL_LOCAL_PASSWORD)
 
     psql_conn = nba_psql()
@@ -61,24 +65,27 @@ def get_gamelogs(paired: bool=False):
 
     return gamelogs
 
+
 def transform_data(columns_to_remove: list, gamelogs: dict):
     data_df = pd.DataFrame(data=gamelogs['data'])
     data_df.columns = gamelogs['columns']
 
     data_df = data_df.drop(columns=columns_to_remove)
     wl_idx = data_df.columns.get_loc('wl')
-    
+
     data_df = data_df.astype(float)
     data_df = (data_df - data_df.min()) / (data_df.max() - data_df.min())
 
     data = data_df.values.tolist()
     return data, wl_idx
 
+
 def main():
     train_set, val_set, test_set = load_dataset()
     print(len(train_set))
     print(len(val_set))
     print(len(test_set))
+
 
 if __name__ == "__main__":
     main()

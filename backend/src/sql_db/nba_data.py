@@ -5,6 +5,7 @@ from tqdm import tqdm
 from nba_api.stats import endpoints
 from src.globals import HEADERS, GAMELOG_COLUMNS, WIN, LOSS
 
+
 def get_all_team_game_logs(team_ids: list, seasons: list, season_type: str):
     columns = GAMELOG_COLUMNS + ['MATCHUP']
     df_all_game_logs = pd.DataFrame(columns=columns)
@@ -21,10 +22,12 @@ def get_all_team_game_logs(team_ids: list, seasons: list, season_type: str):
 
     return df_all_game_logs
 
+
 def get_team_game_logs(team_id: int, season_type: str, season: str, columns: list):
     team_game_logs = endpoints.teamgamelogs.TeamGameLogs(team_id_nullable=team_id, season_type_nullable=season_type, season_nullable=season, headers=HEADERS)
     df_team_game_logs = team_game_logs.get_data_frames()
     return df_team_game_logs[0][columns]
+
 
 def calculate_elo_rating(team_elo: float, opp_elo: float, won: bool, MOV_winner: int):
     # R_i = k * (S_team - E_team + R_(i-1))
@@ -36,10 +39,11 @@ def calculate_elo_rating(team_elo: float, opp_elo: float, won: bool, MOV_winner:
     if won:
         S_team = 1
         elo_diff = -1.0 * elo_diff
-    
+
     k = 20.0 * ((MOV_winner + 3) ** 0.8) / (7.5 + 0.006 * elo_diff)
 
     return k * (S_team - E_team) + team_elo
+
 
 def main():
     from src.globals import SEASON_TYPE, SEASON
@@ -49,6 +53,7 @@ def main():
     columns = df_game_logs.columns
     values_list = df_game_logs.values.tolist()
     print(len(values_list[0]))
+
 
 if __name__ == "__main__":
     main()
